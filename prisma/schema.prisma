@@ -24,7 +24,7 @@ model User {
   pemain        Pemain?
   wasit         Wasit?
   pelatih       Pelatih?
-  penonton      Pembelian_Tiket[]
+  tikets        Pembelian_Tiket[]
   peminjamans   Peminjaman[]
   panitia       Rapat[]           @relation("panitia")
   manajer_tim_A Rapat[]           @relation("manajer_tim_A")
@@ -63,8 +63,8 @@ model Wasit {
   user     User   @relation(fields: [username], references: [username])
   lisensi  String
 
-  wp     Wasit_Pertandingan[]
-  ujians Ujian[]
+  pertandingans Wasit_Pertandingan[]
+  ujians        Ujian[]
 }
 
 model Pelatih {
