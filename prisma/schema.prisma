@@ -20,13 +20,15 @@ model User {
   tanggal_lahir DateTime
   peran         String
 
-  tim_manajer Tim?
-  pemain      Pemain?
-  wasit       Wasit?
-  pelatih     Pelatih?
-  penonton    Pembelian_Tiket[]
-  peminjamans Peminjaman[]
-  rapat       Rapat[]
+  tim_manajer   Tim?
+  pemain        Pemain?
+  wasit         Wasit?
+  pelatih       Pelatih?
+  penonton      Pembelian_Tiket[]
+  peminjamans   Peminjaman[]
+  panitia       Rapat[]           @relation("panitia")
+  manajer_tim_A Rapat[]           @relation("manajer_tim_A")
+  manajer_tim_B Rapat[]           @relation("manajer_tim_B")
 }
 
 model Tim {
@@ -141,8 +143,10 @@ model Rapat {
   manajer_tim_A    String
   manajer_tim_B    String
   Isi              String
-  user             User         @relation(fields: [username_panitia], references: [username])
+  user_panitia     User         @relation("panitia", fields: [username_panitia], references: [username])
   pertandingan     Pertandingan @relation(fields: [id_pertandingan], references: [id])
+  user_manajer_A   User         @relation("manajer_tim_A", fields: [manajer_tim_A], references: [username])
+  user_manajer_B   User         @relation("manajer_tim_B", fields: [manajer_tim_B], references: [username])
 
   @@id([username_panitia, id_pertandingan, datetime, manajer_tim_A, manajer_tim_B])
 }
