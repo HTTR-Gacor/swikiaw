@@ -25,6 +25,7 @@ model User {
   wasit       Wasit?
   pelatih     Pelatih?
   penonton    Pembelian_Tiket[]
+  peminjamans Peminjaman[]
 }
 
 model Tim {
@@ -69,6 +70,7 @@ model Stadium {
   kapasitas Int
 
   pertandingans Pertandingan[]
+  peminjamans Peminjaman[]
 }
 
 model Pertandingan {
@@ -118,3 +120,15 @@ model Tim_Pertandigan {
 
   @@id([id_pertandingan, nama_tim])
 }
+
+model Peminjaman {
+  username_manajer String
+  start DateTime
+  end DateTime
+  id_stadium String
+  user User @relation(fields: [username_manajer], references: [username])
+  stadium Stadium @relation(fields: [id_stadium], references: [id])
+
+  @@id([username_manajer, start])
+}
+
