@@ -20,8 +20,17 @@ model User {
   tanggal_lahir DateTime
   peran         String
 
-  tim_manajer Tim?
-  pemain      Pemain?
+  tim_manajer   Tim?
+  pemain        Pemain?
+  wasit         Wasit?
+  pelatih       Pelatih?
+  tikets        Pembelian_Tiket[]
+  peminjamans   Peminjaman[]
+  panitia       Rapat[]           @relation("panitia")
+  manajer_tim_A Rapat[]           @relation("manajer_tim_A")
+  manajer_tim_B Rapat[]           @relation("manajer_tim_B")
+  undangan      Undangan[]
+  pendaftarans  Pendaftaran[]
 }
 
 model Tim {
@@ -30,13 +39,155 @@ model Tim {
   username_manajer String @unique
   manajer          User   @relation(fields: [username_manajer], references: [username])
 
-  pemains Pemain[]
+  pemains       Pemain[]
+  pelatihs      Pelatih[]
+  pertandingans Tim_Pertandigan[]
+  undangans     Undangan[]
+  pendaftarans  Pendaftaran[]
 }
 
 model Pemain {
+  username   String  @id
+  nama_tim   String?
+  is_captain Boolean
+  posisi     String
+  npm        String
+  user       User    @relation(fields: [username], references: [username])
+  tim        Tim?    @relation(fields: [nama_tim], references: [nama])
+
+  peristiwa Peristiwa[]
+}
+
+model Wasit {
   username String @id
   user     User   @relation(fields: [username], references: [username])
+  lisensi  String
 
-  nama_tim String? @unique
-  tim      Tim?  @relation(fields: [nama_tim], references: [nama])
+  pertandingans Wasit_Pertandingan[]
+  ujians        Ujian[]
+}
+
+model Pelatih {
+  username     String  @id
+  nama_tim     String?
+  spesialisasi String
+
+  user User @relation(fields: [username], references: [username])
+  tim  Tim? @relation(fields: [nama_tim], references: [nama])
+}
+
+model Stadium {
+  id        String @id @default(uuid()) @db.Uuid()
+  nama      String
+  alamat    String
+  kapasitas Int
+
+  pertandingans Pertandingan[]
+  peminjamans   Peminjaman[]
+}
+
+model Pertandingan {
+  id         String   @id @default(uuid()) @db.Uuid()
+  start      DateTime
+  end        DateTime
+  stadium_id String   @db.Uuid()
+  stadium    Stadium  @relation(fields: [stadium_id], references: [id])
+
+  peristiwas        Peristiwa[]
+  tim_pertandingans Tim_Pertandigan[]
+  rapat             Rapat?
+  wasits            Wasit_Pertandingan[]
+}
+
+model Peristiwa {
+  id_pertandingan String       @db.Uuid()
+  time            Int
+  jenis           String
+  username_pemain String
+  pertandingan    Pertandingan @relation(fields: [id_pertandingan], references: [id])
+  pemain          Pemain       @relation(fields: [username_pemain], references: [username])
+
+  @@id([id_pertandingan, time, jenis])
+}
+
+model Wasit_Pertandingan {
+  username_wasit  String
+  id_pertandingan String       @db.Uuid()
+  posisi_wasit    String
+  wasit           Wasit        @relation(fields: [username_wasit], references: [username])
+  pertandingan    Pertandingan @relation(fields: [id_pertandingan], references: [id])
+
+  @@id([username_wasit, id_pertandingan])
+}
+
+model Pembelian_Tiket {
+  id_receipt        String   @id @default(uuid()) @db.Uuid()
+  username_penonton String
+  tanggal_pembelian DateTime
+  jenis_tiket       String
+  jenis_pembayaran  String
+  user              User     @relation(fields: [username_penonton], references: [username])
+}
+
+model Tim_Pertandigan {
+  id_pertandingan String       @db.Uuid()
+  nama_tim        String
+  skor            Int
+  tim             Tim          @relation(fields: [nama_tim], references: [nama])
+  pertandingan    Pertandingan @relation(fields: [id_pertandingan], references: [id])
+
+  @@id([id_pertandingan, nama_tim])
+}
+
+model Peminjaman {
+  username_manajer String
+  start            DateTime
+  end              DateTime
+  id_stadium       String   @db.Uuid()
+  user             User     @relation(fields: [username_manajer], references: [username])
+  stadium          Stadium  @relation(fields: [id_stadium], references: [id])
+
+  @@id([username_manajer, start])
+}
+
+model Rapat {
+  username_panitia String
+  id_pertandingan  String       @unique @db.Uuid()
+  datetime         DateTime
+  manajer_tim_A    String
+  manajer_tim_B    String
+  Isi              String
+  user_panitia     User         @relation("panitia", fields: [username_panitia], references: [username])
+  pertandingan     Pertandingan @relation(fields: [id_pertandingan], references: [id])
+  user_manajer_A   User         @relation("manajer_tim_A", fields: [manajer_tim_A], references: [username])
+  user_manajer_B   User         @relation("manajer_tim_B", fields: [manajer_tim_B], references: [username])
+
+  @@id([username_panitia, id_pertandingan, datetime, manajer_tim_A, manajer_tim_B])
+}
+
+model Undangan {
+  id                String @id @default(uuid()) @db.Uuid()
+  nama_tim          String
+  username_kandidat String
+  status            String
+  user              User   @relation(fields: [username_kandidat], references: [username])
+  tim               Tim    @relation(fields: [nama_tim], references: [nama])
+}
+
+model Pendaftaran {
+  id                String @id @default(uuid()) @db.Uuid()
+  nama_tim          String
+  username_kandidat String
+  status            String
+  user              User   @relation(fields: [username_kandidat], references: [username])
+  tim               Tim    @relation(fields: [nama_tim], references: [nama])
+}
+
+model Ujian {
+  id             String   @id @default(uuid()) @db.Uuid()
+  username_wasit String
+  status         Boolean
+  tanggal        DateTime
+  skor           Int
+  wasit          Wasit    @relation(fields: [username_wasit], references: [username])
 }
