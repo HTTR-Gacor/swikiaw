@@ -19,6 +19,80 @@ model User {
   no_hp         String
   tanggal_lahir DateTime
   peran         String
+
+  tim_manajer Tim?
+  pemain      Pemain?
+  wasit       Wasit?
+  pelatih     Pelatih?
 }
 
+model Tim {
+  nama             String @id
+  universitas      String
+  username_manajer String @unique
+  manajer          User   @relation(fields: [username_manajer], references: [username])
 
+  pemains  Pemain[]
+  pelatihs Pelatih[]
+}
+
+model Pemain {
+  username String @id
+  user     User   @relation(fields: [username], references: [username])
+
+  nama_tim String? @unique
+  tim      Tim?    @relation(fields: [nama_tim], references: [nama])
+}
+
+model Wasit {
+  username String @id
+  user     User   @relation(fields: [username], references: [username])
+  lisensi  String
+
+  wp Wasit_Pertandingan?
+}
+
+model Pelatih {
+  username String  @id
+  nama_tim String?
+
+  user User @relation(fields: [username], references: [username])
+  tim  Tim? @relation(fields: [nama_tim], references: [nama])
+}
+
+model Stadium {
+  id        String @id @default(uuid())
+  nama      String
+  alamat    String
+  kapasitas Int
+
+  pertandingans Pertandingan[]
+}
+
+model Pertandingan {
+  id      String   @id @default(uuid())
+  start   DateTime
+  end     DateTime
+  stadium String
+  stadion Stadium @relation(fields: [stadium], references: [id])
+
+  peristiwas Peristiwa[]
+}
+
+model Peristiwa {
+  id_pertandingan String
+  time            Int
+  jenis           String
+  pertandingan    Pertandingan @relation(fields: [id_pertandingan], references: [id])
+
+  @@id([id_pertandingan, time, jenis])
+}
+
+model Wasit_Pertandingan { 
+  username_wasit String
+  id_pertandingan String
+  posisi_wasit String
+  
+
+  @@id([username_wasit, id_pertandingan])
+}
