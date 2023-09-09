@@ -11,12 +11,14 @@ datasource db {
 }
 
 model User {
-  username   String @id
-  password   String
-  nama_depan String
+  username      String   @id
+  password      String
+  nama_depan    String
   nama_belakang String
-  alamat String
-  no_hp String
+  alamat        String
+  no_hp         String
   tanggal_lahir DateTime
-  peran String
+  peran         String
 }
+
+
