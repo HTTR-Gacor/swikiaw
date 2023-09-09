@@ -96,6 +96,7 @@ model Pertandingan {
   peristiwas        Peristiwa[]
   tim_pertandingans Tim_Pertandigan[]
   rapat             Rapat?
+  wasits            Wasit_Pertandingan[]
 }
 
 model Peristiwa {
@@ -111,9 +112,10 @@ model Peristiwa {
 
 model Wasit_Pertandingan {
   username_wasit  String
-  id_pertandingan String @db.Uuid()
+  id_pertandingan String       @db.Uuid()
   posisi_wasit    String
-  wasit           Wasit  @relation(fields: [username_wasit], references: [username])
+  wasit           Wasit        @relation(fields: [username_wasit], references: [username])
+  pertandingan    Pertandingan @relation(fields: [id_pertandingan], references: [id])
 
   @@id([username_wasit, id_pertandingan])
 }
