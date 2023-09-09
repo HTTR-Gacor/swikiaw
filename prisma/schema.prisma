@@ -9,3 +9,14 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  username   String @id
+  password   String
+  nama_depan String
+  nama_belakang String
+  alamat String
+  no_hp String
+  tanggal_lahir DateTime
+  peran String
+}
