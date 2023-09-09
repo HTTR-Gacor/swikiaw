@@ -51,7 +51,7 @@ model Pemain {
   username String @id
   user     User   @relation(fields: [username], references: [username])
 
-  nama_tim String? @unique
+  nama_tim String?
   tim      Tim?    @relation(fields: [nama_tim], references: [nama])
 }
 
