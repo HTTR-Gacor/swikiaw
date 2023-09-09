@@ -11,12 +11,32 @@ datasource db {
 }
 
 model User {
-  username   String @id
-  password   String
-  nama_depan String
+  username      String   @id
+  password      String
+  nama_depan    String
   nama_belakang String
-  alamat String
-  no_hp String
+  alamat        String
+  no_hp         String
   tanggal_lahir DateTime
-  peran String
+  peran         String
+
+  tim_manajer Tim?
+  pemain      Pemain?
+}
+
+model Tim {
+  nama             String @id
+  universitas      String
+  username_manajer String @unique
+  manajer          User   @relation(fields: [username_manajer], references: [username])
+
+  pemains Pemain[]
+}
+
+model Pemain {
+  username String @id
+  user     User   @relation(fields: [username], references: [username])
+
+  nama_tim String? @unique
+  tim      Tim?  @relation(fields: [nama_tim], references: [nama])
 }
