@@ -24,6 +24,7 @@ model User {
   pemain      Pemain?
   wasit       Wasit?
   pelatih     Pelatih?
+  penonton    Penonton?
 }
 
 model Tim {
@@ -95,4 +96,13 @@ model Wasit_Pertandingan {
   wasit           Wasit  @relation(fields: [username_wasit], references: [username])
 
   @@id([username_wasit, id_pertandingan])
+}
+
+model Pembelian_Tiket {
+  id_receipt        String   @id @default(uuid())
+  username_penonton String
+  tanggal_pembelian DateTime
+  jenis_tiket       String
+  jenis_pembayaran  String
+  user              User     @relation(fields: [username_penonton], references: [username])
 }
