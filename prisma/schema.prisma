@@ -31,7 +31,6 @@ model User {
   manajer_tim_B Rapat[]           @relation("manajer_tim_B")
   undangan      Undangan[]
   pendaftarans  Pendaftaran[]
-  ujians        Ujian[]
 }
 
 model Tim {
@@ -64,7 +63,8 @@ model Wasit {
   user     User   @relation(fields: [username], references: [username])
   lisensi  String
 
-  wp Wasit_Pertandingan[]
+  wp     Wasit_Pertandingan[]
+  ujians Ujian[]
 }
 
 model Pelatih {
@@ -187,5 +187,5 @@ model Ujian {
   status         Boolean
   tanggal        DateTime
   skor           Int
-  user           User     @relation(fields: [username_wasit], references: [username])
+  wasit          Wasit    @relation(fields: [username_wasit], references: [username])
 }
