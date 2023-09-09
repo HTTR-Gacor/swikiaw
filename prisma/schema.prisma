@@ -30,6 +30,7 @@ model User {
   manajer_tim_A Rapat[]           @relation("manajer_tim_A")
   manajer_tim_B Rapat[]           @relation("manajer_tim_B")
   undangan      Undangan[]
+  pendaftarans  Pendaftaran[]
 }
 
 model Tim {
@@ -42,6 +43,7 @@ model Tim {
   pelatihs      Pelatih[]
   pertandingans Tim_Pertandigan[]
   undangans     Undangan[]
+  pendaftarans  Pendaftaran[]
 }
 
 model Pemain {
@@ -154,6 +156,15 @@ model Rapat {
 }
 
 model Undangan {
+  id                String @id @default(uuid())
+  nama_tim          String
+  username_kandidat String
+  status            String
+  user              User   @relation(fields: [username_kandidat], references: [username])
+  tim               Tim    @relation(fields: [nama_tim], references: [nama])
+}
+
+model Pendaftaran {
   id                String @id @default(uuid())
   nama_tim          String
   username_kandidat String
