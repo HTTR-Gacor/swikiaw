@@ -31,6 +31,7 @@ model User {
   manajer_tim_B Rapat[]           @relation("manajer_tim_B")
   undangan      Undangan[]
   pendaftarans  Pendaftaran[]
+  ujians        Ujian[]
 }
 
 model Tim {
@@ -171,4 +172,13 @@ model Pendaftaran {
   status            String
   user              User   @relation(fields: [username_kandidat], references: [username])
   tim               Tim    @relation(fields: [nama_tim], references: [nama])
+}
+
+model Ujian {
+  id             String   @id @default(uuid())
+  username_wasit String
+  status         Boolean
+  tanggal        DateTime
+  skor           Int
+  user           User     @relation(fields: [username_wasit], references: [username])
 }
