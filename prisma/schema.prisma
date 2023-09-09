@@ -49,7 +49,7 @@ model Wasit {
   user     User   @relation(fields: [username], references: [username])
   lisensi  String
 
-  wp Wasit_Pertandingan?
+  wp Wasit_Pertandingan[]
 }
 
 model Pelatih {
@@ -74,7 +74,7 @@ model Pertandingan {
   start   DateTime
   end     DateTime
   stadium String
-  stadion Stadium @relation(fields: [stadium], references: [id])
+  stadion Stadium  @relation(fields: [stadium], references: [id])
 
   peristiwas Peristiwa[]
 }
@@ -88,11 +88,11 @@ model Peristiwa {
   @@id([id_pertandingan, time, jenis])
 }
 
-model Wasit_Pertandingan { 
-  username_wasit String
+model Wasit_Pertandingan {
+  username_wasit  String
   id_pertandingan String
-  posisi_wasit String
-  
+  posisi_wasit    String
+  wasit           Wasit  @relation(fields: [username_wasit], references: [username])
 
   @@id([username_wasit, id_pertandingan])
 }
