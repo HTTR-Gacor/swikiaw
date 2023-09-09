@@ -48,10 +48,15 @@ model Tim {
 }
 
 model Pemain {
-  username String @id
-  user     User   @relation(fields: [username], references: [username])
-  nama_tim String?
-  tim      Tim?    @relation(fields: [nama_tim], references: [nama])
+  username   String  @id
+  nama_tim   String?
+  is_captain Boolean
+  posisi     String
+  npm        String
+  user       User    @relation(fields: [username], references: [username])
+  tim        Tim?    @relation(fields: [nama_tim], references: [nama])
+
+  peristiwa Peristiwa[]
 }
 
 model Wasit {
@@ -63,8 +68,9 @@ model Wasit {
 }
 
 model Pelatih {
-  username String  @id
-  nama_tim String?
+  username     String  @id
+  nama_tim     String?
+  spesialisasi String
 
   user User @relation(fields: [username], references: [username])
   tim  Tim? @relation(fields: [nama_tim], references: [nama])
@@ -81,11 +87,11 @@ model Stadium {
 }
 
 model Pertandingan {
-  id      String   @id @default(uuid())
-  start   DateTime
-  end     DateTime
-  stadium String
-  stadion Stadium  @relation(fields: [stadium], references: [id])
+  id         String   @id @default(uuid())
+  start      DateTime
+  end        DateTime
+  stadium_id String
+  stadium    Stadium  @relation(fields: [stadium_id], references: [id])
 
   peristiwas        Peristiwa[]
   tim_pertandingans Tim_Pertandigan[]
@@ -96,7 +102,9 @@ model Peristiwa {
   id_pertandingan String
   time            Int
   jenis           String
+  username_pemain String
   pertandingan    Pertandingan @relation(fields: [id_pertandingan], references: [id])
+  pemain          Pemain       @relation(fields: [username_pemain], references: [username])
 
   @@id([id_pertandingan, time, jenis])
 }
